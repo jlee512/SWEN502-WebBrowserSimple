@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WebBrowserSimple</string>
+    <string name="journey_logo">Journey Logo</string>
+    <string name="search">Search</string>
 </resources>
