@@ -2,16 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/overallLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:visibility="visible"
     tools:context="com.example.julia.webbrowsersimple.WebBrowserSimpleActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView"
@@ -43,11 +45,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:drawableLeft=""
+                android:cursorVisible="false"
                 android:ems="10"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center_horizontal"
                 android:hint="Enter your destination"
+                android:imeOptions="actionSend"
                 android:inputType="textPersonName"
+                android:textColor="@color/orangeFontColor"
+                android:textColorHint="@color/blueFontColor"
                 tools:ignore="HardcodedText,RtlHardcoded" />
 
         </LinearLayout>
