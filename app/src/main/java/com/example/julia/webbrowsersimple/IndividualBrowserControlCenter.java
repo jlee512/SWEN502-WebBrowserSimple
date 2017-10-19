@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -58,6 +59,7 @@ public class IndividualBrowserControlCenter {
 
         // Get all interactive components as objects and setup event listeners
         EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+        View overallLayout = (View) activity.findViewById(R.id.overallLayout);
         ImageView target_icon = (ImageView) activity.findViewById(R.id.target_icon);
         ImageView home = (ImageView) activity.findViewById(R.id.journey_home);
         //Floating Action Buttons
@@ -68,6 +70,9 @@ public class IndividualBrowserControlCenter {
         FloatingActionButton forward_button = (FloatingActionButton) activity.findViewById(R.id.forward_button);
 
         //Setup event listeners
+        setup_urlEntryOnClickListener(url_entry);
+        setup_overallLayoutOnClickListener(overallLayout);
+        setup_urlEntryOnEditListener(url_entry);
         setup_homeButtonOnClickListener(home);
         setup_googleIconOnClickListener(googleSearch_button);
         setup_targetIconOnClickListener(target_icon);
@@ -137,6 +142,8 @@ public class IndividualBrowserControlCenter {
                     browser_main_logic(url_string);
                     return true;
                 } else {
+                    //Switch to home screen logic to displat error message
+                    home_screen_logic();
                     TextView user_feedback1 = (TextView) activity.findViewById(R.id.user_feedback1);
                     TextView user_feedback2 = (TextView) activity.findViewById(R.id.user_feedback2);
                     user_feedback1.setText("Sorry, we couldn't find where you want to go");
@@ -170,6 +177,7 @@ public class IndividualBrowserControlCenter {
                     }
                     browser_main_logic(url_string);
                 } else {
+                    //Switch to home screen logic to display error message
                     home_screen_logic();
                     TextView user_feedback1 = (TextView) activity.findViewById(R.id.user_feedback1);
                     TextView user_feedback2 = (TextView) activity.findViewById(R.id.user_feedback2);
