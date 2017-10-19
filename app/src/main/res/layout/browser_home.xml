@@ -22,6 +22,24 @@
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
+            <TextView
+                android:id="@+id/user_feedback1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textAllCaps="false"
+                android:textColor="@color/blueFontColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/user_feedback2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/blueFontColor"
+                android:textSize="14sp" />
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
@@ -39,7 +57,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/target_icon"
                     android:layout_width="72dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.08"
@@ -48,7 +66,7 @@
                     tools:ignore="VectorDrawableCompat" />
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/url_entry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
@@ -58,12 +76,49 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:gravity="center_horizontal"
-                    android:hint="Enter your destination"
-                    android:imeOptions="actionSend"
-                    android:inputType="textPersonName"
+                    android:hint="Enter a destination web address"
+                    android:imeOptions="actionGo"
+                    android:inputType="textUri"
                     android:textColor="@color/orangeFontColor"
                     android:textColorHint="@color/blueFontColor"
                     tools:ignore="HardcodedText,RtlHardcoded" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/history_bookmark_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingBottom="5dp"
+                android:gravity="center_horizontal">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/history_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:clickable="true"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/history_icon"
+                    tools:ignore="NestedWeights" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/bookmarks_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:clickable="true"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/bookmarks_icon" />
 
             </LinearLayout>
 

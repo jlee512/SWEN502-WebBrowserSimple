@@ -1,6 +1,24 @@
 package com.example.julia.webbrowsersimple;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.Image;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by julia on 19/10/2017.
@@ -14,8 +32,158 @@ public class IndividualBrowserControlCenter {
         this.activity = individual_browser;
     }
 
-    void home_screen_logic() {
 
+    // This method encapsulates the logic (backend/dynamic frontend) for the browser home screen
+    void home_screen_logic() {
+        activity.setContentView(R.layout.browser_home);
+
+        EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+        ImageView target_icon = (ImageView) activity.findViewById(R.id.target_icon);
+        url_entry.setHintTextColor(Color.parseColor("#057eaa"));
+
+        // Floating Action Buttons
+        FloatingActionButton history_button = (FloatingActionButton) activity.findViewById(R.id.history_button);
+        FloatingActionButton bookmarks_button = (FloatingActionButton) activity.findViewById(R.id.bookmarks_button);
+
+        //Text onclick listener to detect if text is selected
+        url_entry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+                url_entry.setHintTextColor(activity.getResources().getColor(R.color.orangeFontColor));
+                url_entry.setTextColor(activity.getResources().getColor(R.color.orangeFontColor));
+                if (url_entry.getText().length() > 0) {
+                    url_entry.setCursorVisible(true);
+                } else {
+                    url_entry.setCursorVisible(false);
+                }
+            }
+        });
+
+        View overallLayout = (View) activity.findViewById(R.id.overallLayout);
+
+        //Overall layout click listener to detect if anything other than text is selected
+        overallLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+                url_entry.setHintTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                url_entry.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                url_entry.setCursorVisible(false);
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
+        // This method captures the 'Go' keyboard press when the url_entry field is edited
+        url_entry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView url_entry, int actionId, KeyEvent event) {
+                String url_string = url_entry.getText().toString();
+                if (url_validity_check(url_string)) {
+                    View view = activity.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    browser_main_logic(url_string);
+                    return true;
+                } else {
+                    TextView user_feedback1 = (TextView) activity.findViewById(R.id.user_feedback1);
+                    TextView user_feedback2 = (TextView) activity.findViewById(R.id.user_feedback2);
+                    user_feedback1.setText("Sorry, we couldn't find where you want to go");
+                    user_feedback2.setText("Click G to search for your destination on Google");
+                    url_entry.setHintTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                    url_entry.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                    url_entry.setCursorVisible(false);
+                    View view = activity.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    return false;
+                }
+            }
+        });
+
+        //This method allows the user to access the url they've entered by clicking the target icon
+        target_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+                String url_string = url_entry.getText().toString();
+                if (url_validity_check(url_string)) {
+                    View view = activity.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    browser_main_logic(url_string);
+                } else {
+                    TextView user_feedback1 = (TextView) activity.findViewById(R.id.user_feedback1);
+                    TextView user_feedback2 = (TextView) activity.findViewById(R.id.user_feedback2);
+                    user_feedback1.setText("Sorry, we couldn't find where you want to go");
+                    user_feedback2.setText("Click G to search for your destination on Google");
+                    url_entry.setHintTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                    url_entry.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
+                    url_entry.setCursorVisible(false);
+                    View view = activity.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                }
+            }
+        });
+    }
+
+    // This method encapsulates the logic (backend/dynamic frontend) for the main browser interface
+    void browser_main_logic(String url_string) {
+        activity.setContentView(R.layout.browser_main);
+
+        // Get all interactive components as objects and setup event listeners
+        EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+        ImageView target_icon = (ImageView) activity.findViewById(R.id.target_icon);
+        ImageView home = (ImageView) activity.findViewById(R.id.journey_home);
+        //Floating Action Buttons
+        FloatingActionButton back_button = (FloatingActionButton) activity.findViewById(R.id.back_button);
+        FloatingActionButton history_button = (FloatingActionButton) activity.findViewById(R.id.history_button);
+        FloatingActionButton bookmarks_button = (FloatingActionButton) activity.findViewById(R.id.bookmarks_button);
+        FloatingActionButton forward_button = (FloatingActionButton) activity.findViewById(R.id.forward_button);
+
+        //Render the webview
+        WebView webView = (WebView) activity.findViewById(R.id.main_webview);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                EditText url_entry = (EditText) activity.findViewById(R.id.url_entry);
+                url_entry.setText(url);
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        webView.loadUrl(url_string);
+
+        // Setup event listeners for buttons to carry out corresponding actions
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                home_screen_logic();
+            }
+        });
+
+        //Setup listener to asses whether webview has changes and update url_entry
+
+    }
+
+    boolean url_validity_check (String url_string) {
+        return URLUtil.isValidUrl(url_string);
+    }
+
+    String url_formatting_check (String url_string) {
+        return "";
     }
 
 }
