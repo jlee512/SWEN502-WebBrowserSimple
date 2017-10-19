@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -15,7 +13,7 @@ public class WebBrowserSimpleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_browser_simple);
+        setContentView(R.layout.browser_home);
 
         EditText text = (EditText) findViewById(R.id.editText);
         text.setHintTextColor(Color.parseColor("#057eaa"));
