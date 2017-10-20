@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +41,8 @@ public class IndividualBrowserControlCenter {
         this.activity = individual_browser;
     }
 
+    // Session variables - populated from shared preferences if available
+
     public ArrayList<String> getBrowsing_history() {
         return browsing_history;
     }
@@ -53,6 +54,8 @@ public class IndividualBrowserControlCenter {
     public ArrayList<String> getBookmarks() {
         return bookmarks;
     }
+
+    // -------------------------- Core methods related to primary application layouts ---------------------
 
     // This method encapsulates the logic (backend/dynamic frontend) for the browser home screen
     void home_screen_logic() {
@@ -130,6 +133,8 @@ public class IndividualBrowserControlCenter {
         setup_expandableMenu(menu_button);
 
     }
+
+    // -------------------------- Helper methods that are used within the core layout methods ---------------------
 
     boolean url_validity_check(String url_string) {
         return URLUtil.isValidUrl(url_string);
