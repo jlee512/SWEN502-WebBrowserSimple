@@ -66,7 +66,7 @@
                     tools:ignore="VectorDrawableCompat" />
 
                 <EditText
-                    android:id="@+id/url_entry"
+                    android:id="@+id/url_entry1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"

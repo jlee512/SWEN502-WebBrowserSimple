@@ -1,5 +1,10 @@
 <resources>
 
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:itemBackground">@color/popupMenuColor</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="Custom_Theme_SimpleWebBrowser" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="colorAccent">@android:color/holo_orange_dark</item>

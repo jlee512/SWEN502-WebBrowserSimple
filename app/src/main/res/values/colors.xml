@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="blueFontColor">#057eaa</color>
     <color name="orangeFontColor">#ff9400</color>
+    <color name="popupMenuColor">#ffe5c1</color>
 </resources>

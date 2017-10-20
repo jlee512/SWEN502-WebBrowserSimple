@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/te_haerenga_logo"
+        android:title="@string/journey_home" />
+    <!--Submenu-->
+    <item
+        android:id="@+id/back_menu"
+        android:icon="@drawable/back_button_icon"
+        android:title="Back"
+        tools:ignore="HardcodedText" />
+    <item
+        android:id="@+id/forward_menu"
+        android:icon="@drawable/forward_button_icon"
+        android:title="Forward"
+        tools:ignore="HardcodedText" />
+    <item
+        android:id="@+id/bookmarks_menu"
+        android:icon="@drawable/bookmarks_icon"
+        android:title="@string/bookmarks">
+        <menu>
+            <item
+                android:id="@+id/add_bookmark_menu"
+                android:icon="@android:drawable/ic_menu_add"
+                android:title="@string/add_bookmark" />
+            <item
+                android:id="@+id/view_bookmarks_menu"
+                android:icon="@android:drawable/ic_menu_view"
+                android:title="View Bookmarks"
+                tools:ignore="HardcodedText" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/history_menu"
+        android:icon="@drawable/history_icon"
+        android:title="@string/history">
+        <menu>
+            <item
+                android:id="@+id/clear_history_menu"
+                android:icon="@android:drawable/ic_menu_close_clear_cancel"
+                android:title="Clear History"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/view_history_menu"
+                android:icon="@android:drawable/ic_menu_view"
+                android:title="View History"
+                tools:ignore="HardcodedText" />
+        </menu>
+    </item>
+</menu>

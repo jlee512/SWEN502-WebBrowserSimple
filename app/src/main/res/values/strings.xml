@@ -4,4 +4,10 @@
     <string name="search">Search</string>
     <string name="go">Go</string>
     <string name="targetlogo">TargetLogo</string>
+    <string name="view_bookmarks">View Bookmarks</string>
+    <string name="string_view_bookmarks" />
+    <string name="add_bookmark">Add Bookmark</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="history">History</string>
+    <string name="journey_home">Journey Home</string>
 </resources>

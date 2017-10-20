@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 public class WebBrowserSimpleActivity extends AppCompatActivity {
 
@@ -14,7 +17,7 @@ public class WebBrowserSimpleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IndividualBrowserControlCenter browserInstance = new IndividualBrowserControlCenter(this);
+        IndividualBrowserControlCenter browserInstance = browserInstance = new IndividualBrowserControlCenter(this);
         browserInstance.home_screen_logic();
 
     }
