@@ -2,21 +2,18 @@ package com.example.julia.webbrowsersimple;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
-import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -37,6 +34,9 @@ public class IndividualBrowserControlCenter {
     ArrayList<String> browsing_history = new ArrayList<>();
     ArrayList<Long> browsing_timestamps = new ArrayList<>();
     ArrayList<String> bookmarks = new ArrayList<>();
+    //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
+    boolean te_reo_homepage = false;
+    boolean store_history = true;
 
     IndividualBrowserControlCenter(Activity individual_browser) {
         this.activity = individual_browser;
@@ -74,6 +74,12 @@ public class IndividualBrowserControlCenter {
 
         activity.setContentView(R.layout.browser_home);
 
+        //Apply Te Reo logo depending on setting
+        if (te_reo_homepage) {
+            ImageView home_page_logo = (ImageView) activity.findViewById(R.id.home_page_logo);
+            home_page_logo.setImageResource(R.drawable.te_haerenga_logo);
+        }
+
         EditText url_entry = (EditText) activity.findViewById(R.id.url_entry1);
         ImageView target_icon = (ImageView) activity.findViewById(R.id.target_icon);
 
@@ -97,6 +103,12 @@ public class IndividualBrowserControlCenter {
     // This method encapsulates the logic (backend/dynamic frontend) for the main browser interface
     void browser_main_logic(String url_string) {
         activity.setContentView(R.layout.browser_main);
+
+        //Apply Te Reo logo depending on setting
+        if (te_reo_homepage) {
+            ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
+            home_page_logo.setImageResource(R.drawable.te_haerenga_logo);
+        }
 
         // Get all interactive components as objects and setup event listeners
         EditText url_entry = (EditText) activity.findViewById(R.id.url_entry2);
@@ -194,10 +206,10 @@ public class IndividualBrowserControlCenter {
                     user_feedback1.setText("Sorry, we couldn't find where you want to go");
                     user_feedback2.setText("Click G to search for your destination on Google");
                     url_entry.setHintTextColor(activity.getResources().getColor(R.color.blueFontColor));
-                    url_entry.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
                     url_entry.setCursorVisible(false);
                     EditText url_failure = (EditText) activity.findViewById(R.id.url_entry1);
                     url_failure.setText(url_string);
+                    url_failure.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
                     hideKeyboard(activity);
                     return false;
                 }
@@ -222,10 +234,10 @@ public class IndividualBrowserControlCenter {
                     user_feedback1.setText("Sorry, we couldn't find where you want to go");
                     user_feedback2.setText("Click G to search for your destination on Google");
                     url_entry.setHintTextColor(activity.getResources().getColor(R.color.blueFontColor));
-                    url_entry.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
                     url_entry.setCursorVisible(false);
                     EditText url_failure = (EditText) activity.findViewById(R.id.url_entry1);
                     url_failure.setText(url_string);
+                    url_failure.setTextColor(activity.getResources().getColor(R.color.blueFontColor));
                     hideKeyboard(activity);
                 }
             }
@@ -330,6 +342,16 @@ public class IndividualBrowserControlCenter {
                 //Set the popup menu styles
                 Context wrapper = new ContextThemeWrapper(activity, R.style.PopupMenu);
                 PopupMenu popup = new PopupMenu(wrapper, v);
+
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.browser_menu, popup.getMenu());
+
+                //Set state of history storage setting and Te Reo homepage options
+                MenuItem history_storage_checkable = popup.getMenu().findItem(R.id.hide_history_menu);
+                MenuItem teReo_homepage_checkable = popup.getMenu().findItem(R.id.tereo_homepage_menu);
+                history_storage_checkable.setChecked(store_history);
+                teReo_homepage_checkable.setChecked(te_reo_homepage);
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -349,11 +371,22 @@ public class IndividualBrowserControlCenter {
                             case R.id.view_bookmarks_menu:
                                 Log.d("test", "test viewbk");
                                 return true;
+                            case R.id.clear_bookmarks_menu:
+
+                                return true;
                             case R.id.clear_history_menu:
                                 Log.d("test", "test clearhis");
                                 return true;
                             case R.id.view_history_menu:
                                 Log.d("test", "test viewhis");
+                                return true;
+                            case R.id.hide_history_menu:
+                                store_history = !item.isChecked();
+                                item.setChecked(store_history);
+                                return true;
+                            case R.id.tereo_homepage_menu:
+                                te_reo_homepage = !item.isChecked();
+                                item.setChecked(te_reo_homepage);
                                 return true;
                             default:
                                 return false;
@@ -361,8 +394,6 @@ public class IndividualBrowserControlCenter {
                         }
                     }
                 });
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.browser_menu, popup.getMenu());
                 popup.show();
             }
         });

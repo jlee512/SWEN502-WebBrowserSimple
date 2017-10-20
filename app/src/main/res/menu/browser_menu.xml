@@ -32,6 +32,11 @@
                 android:icon="@android:drawable/ic_menu_view"
                 android:title="View Bookmarks"
                 tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/clear_bookmarks_menu"
+                android:icon="@android:drawable/ic_menu_close_clear_cancel"
+                android:title="Clear Bookmarks"
+                tools:ignore="HardcodedText" />
         </menu>
     </item>
     <item
@@ -48,6 +53,23 @@
                 android:id="@+id/view_history_menu"
                 android:icon="@android:drawable/ic_menu_view"
                 android:title="View History"
+                tools:ignore="HardcodedText" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/settings_menu"
+        android:title="Settings"
+        tools:ignore="HardcodedText">
+        <menu>
+            <item
+                android:id="@+id/hide_history_menu"
+                android:checkable="true"
+                android:title="Store History"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/tereo_homepage_menu"
+                android:checkable="true"
+                android:title="Te Reo Homepage"
                 tools:ignore="HardcodedText" />
         </menu>
     </item>
