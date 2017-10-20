@@ -63,15 +63,6 @@ public class IndividualBrowserControlCenter {
 //
 //        }
 
-        if (browsing_history != null && browsing_history.size() != 0) {
-            for (int i = 0; i < browsing_history.size(); i++) {
-                Log.d("test-browser-history", browsing_history.get(i));
-                DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");
-                Log.d("test-browser-timestamp", "" + dateFormatter.format(new Date(browsing_timestamps.get(i))));
-            }
-
-        }
-
         activity.setContentView(R.layout.browser_home);
 
         //Apply Te Reo logo depending on setting
@@ -358,34 +349,62 @@ public class IndividualBrowserControlCenter {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+                            // Option to return the browser home screen (second option to logo in search bar)
                             case R.id.menu_home:
-                                Log.d("test", "test home");
+                                home_screen_logic();
                                 return true;
+                            // TO DO
                             case R.id.back_menu:
                                 Log.d("test", "test back");
                                 return true;
+                            // TO DO
                             case R.id.forward_menu:
                                 Log.d("test", "test fwd");
                                 return true;
+                            // Option to add a bookmark to the users stored bookmarks
                             case R.id.add_bookmark_menu:
-                                Log.d("test", "test addbk");
+                                EditText current_url = (EditText) activity.findViewById(R.id.url_entry2);
+                                String current_url_string = current_url.getText().toString();
+                                bookmarks.add(current_url_string);
                                 return true;
+                            // TO DO
                             case R.id.view_bookmarks_menu:
-                                Log.d("test", "test viewbk");
+                                if (bookmarks != null && bookmarks.size() != 0) {
+                                    for (int i = 0; i < bookmarks.size(); i++) {
+                                        Log.d("Bookmarks test", bookmarks.get(i));
+                                    }
+                                }
                                 return true;
+                            // Option to clear all bookmarks from the users stored bookmarks
                             case R.id.clear_bookmarks_menu:
-
+                                if (bookmarks != null && bookmarks.size() != 0) {
+                                    bookmarks.clear();
+                                }
                                 return true;
+                            // Option to clear all history from the users stored history
                             case R.id.clear_history_menu:
-                                Log.d("test", "test clearhis");
+                                if (browsing_history != null && browsing_history.size() != 0) {
+                                    browsing_history.clear();
+                                    browsing_timestamps.clear();
+                                }
                                 return true;
+                            // TO DO
                             case R.id.view_history_menu:
-                                Log.d("test", "test viewhis");
+                                if (browsing_history != null && browsing_history.size() != 0) {
+                                    for (int i = 0; i < browsing_history.size(); i++) {
+                                        Log.d("test-browser-history", browsing_history.get(i));
+                                        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");
+                                        Log.d("test-browser-timestamp", "" + dateFormatter.format(new Date(browsing_timestamps.get(i))));
+                                    }
+
+                                }
                                 return true;
+                            // Toggle option to not log history (i.e. incognito mode)
                             case R.id.hide_history_menu:
                                 store_history = !item.isChecked();
                                 item.setChecked(store_history);
                                 return true;
+                            // Toggle option to have all logo instances on the browser modified into the Te Reo version
                             case R.id.tereo_homepage_menu:
                                 te_reo_homepage = !item.isChecked();
                                 item.setChecked(te_reo_homepage);
