@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by julia on 19/10/2017.
@@ -31,7 +32,7 @@ public class IndividualBrowserControlCenter {
 
     Activity activity;
     ArrayList<String> browsing_history = new ArrayList<>();
-    ArrayList<String> session_history = new ArrayList<>();
+    List<String> session_history = new ArrayList<>();
     ArrayList<Long> browsing_timestamps = new ArrayList<>();
     ArrayList<String> bookmarks = new ArrayList<>();
     //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
@@ -124,6 +125,8 @@ public class IndividualBrowserControlCenter {
         setup_overallLayoutOnClickListener(overallLayout, url_entry);
         setup_urlEntryOnEditListener(url_entry);
         setup_homeButtonOnClickListener(home);
+        setup_backOnClickListener(back_button, url_entry);
+        setup_forwardOnClickListener(forward_button, url_entry);
         setup_googleIconOnClickListener(googleSearch_button, url_entry);
         setup_targetIconOnClickListener(target_icon, url_entry);
 
@@ -153,6 +156,42 @@ public class IndividualBrowserControlCenter {
 
 
         return "";
+    }
+
+    void setup_backOnClickListener(FloatingActionButton back_button, EditText url_entry) {
+        // Setup back button event listener
+        back_button.setOnClickListener(new CustomOnClickListener(url_entry) {
+            @Override
+            public void onClick(View v) {
+                Log.d("test back", "history size: " + session_history.size());
+                Log.d("test back", "session size less 1: " + (session_history.size() - 1));
+
+                if (session_history.size() > 1 && current_page < (session_history.size() - 1)) {
+                    current_page++;
+                    Log.d("test back", "current page: " + current_page);
+                    Log.d("test-back", session_history.get(session_history.size() - 1 - current_page));
+                    browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                }
+            }
+        });
+    }
+
+    void setup_forwardOnClickListener(FloatingActionButton forward_button, EditText url_entry) {
+        // Setup forward button event listener
+        forward_button.setOnClickListener(new CustomOnClickListener(url_entry){
+            @Override
+            public void onClick(View v) {
+                Log.d("test fwd", "history size: " + session_history.size());
+                Log.d("test fwd", "session size less 1: " + (session_history.size() - 1));
+
+                if (session_history.size() > 1 && current_page > 0) {
+                    current_page--;
+                    Log.d("test fwd", "current page: " + current_page);
+                    Log.d("test-fwd", session_history.get(session_history.size() - 1 - current_page));
+                    browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                }
+            }
+        });
     }
 
     void setup_urlEntryOnClickListener(EditText url_entry) {
@@ -267,6 +306,7 @@ public class IndividualBrowserControlCenter {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // Capture timestamp and url to store in history list
                 addHistoryItem(url);
+                session_history = session_history.subList(0, session_history.size() - current_page);
                 url_entry.setText(url);
                 view.loadUrl(url);
                 return true;
@@ -363,9 +403,8 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // TO DO
                             case R.id.back_menu:
-                                if (session_history.size() > 1 && current_page < (session_history.size())) {
+                                if (session_history.size() > 1 && current_page < (session_history.size() - 1)) {
                                     current_page++;
-                                    Log.d("test-back", session_history.get(session_history.size() - 1 - current_page));
                                     browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
                                 }
                                 return true;
@@ -373,7 +412,6 @@ public class IndividualBrowserControlCenter {
                             case R.id.forward_menu:
                                 if (session_history.size() > 1 && current_page > 0) {
                                     current_page--;
-                                    Log.d("test-fwd", session_history.get(session_history.size() - 1 - current_page));
                                     browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
                                 }
                                 return true;
