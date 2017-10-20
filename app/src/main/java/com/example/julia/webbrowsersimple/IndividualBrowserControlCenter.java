@@ -165,6 +165,7 @@ public class IndividualBrowserControlCenter {
             public void onClick(View v) {
                 Log.d("test back", "history size: " + session_history.size());
                 Log.d("test back", "session size less 1: " + (session_history.size() - 1));
+                Log.d("test back", "current page: " + current_page);
 
                 if (session_history.size() > 1 && current_page < (session_history.size() - 1)) {
                     current_page++;
@@ -236,7 +237,7 @@ public class IndividualBrowserControlCenter {
                     browser_main_logic(url_string);
                     return true;
                 } else {
-                    //Switch to home screen logic to displat error message
+                    //Switch to home screen logic to display error message
                     home_screen_logic();
                     TextView user_feedback1 = (TextView) activity.findViewById(R.id.user_feedback1);
                     TextView user_feedback2 = (TextView) activity.findViewById(R.id.user_feedback2);
@@ -298,15 +299,26 @@ public class IndividualBrowserControlCenter {
 
     void render_webViewClient(WebView webView, String url, EditText url_entry) {
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(true);
         webView.setWebViewClient(new CustomWebViewClient(url_entry) {
 
             // This method populates the url_entry EditText with any navigation by the user in the browser
             // Note: deprecated method user for broadest compatibilty with devices
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //When a user navigates forward by interacting with the browser,
+                // (1) Reset the session history to ignore or pages ahead of this (if navigation back has occurred)
+                // (2) Rest the current page to zero as there is no longer the ability to go forward
+                Log.d("test-session adjust", "current page: " + current_page);
+                Log.d("test-session adjust" , "session length: " + session_history.size());
+                session_history = session_history.subList(0, session_history.size() - current_page);
+                Log.d("New session length", "" + session_history.size());
+                current_page = 0;
+
                 // Capture timestamp and url to store in history list
                 addHistoryItem(url);
-                session_history = session_history.subList(0, session_history.size() - current_page);
+
+                // Update url_entry EditText and load the url
                 url_entry.setText(url);
                 view.loadUrl(url);
                 return true;
@@ -341,6 +353,9 @@ public class IndividualBrowserControlCenter {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //If the user returns home, clear the session history so the user can no longer navigate back and forward based on previous searches
+                session_history.clear();
+
                 WebView webview = (WebView) activity.findViewById(R.id.main_webview);
                 webview.stopLoading();
                 home_screen_logic();
