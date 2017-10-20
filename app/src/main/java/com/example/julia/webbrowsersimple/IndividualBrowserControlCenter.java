@@ -325,9 +325,11 @@ public class IndividualBrowserControlCenter {
     }
 
     void addHistoryItem(String url) {
-        Date current_datetime = new Date();
-        browsing_history.add(url);
-        browsing_timestamps.add(current_datetime.getTime());
+        if (store_history) {
+            Date current_datetime = new Date();
+            browsing_history.add(url);
+            browsing_timestamps.add(current_datetime.getTime());
+        }
     }
 
     void addBookmark(String url) {
