@@ -31,11 +31,13 @@ public class IndividualBrowserControlCenter {
 
     Activity activity;
     ArrayList<String> browsing_history = new ArrayList<>();
+    ArrayList<String> session_history = new ArrayList<>();
     ArrayList<Long> browsing_timestamps = new ArrayList<>();
     ArrayList<String> bookmarks = new ArrayList<>();
     //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
     boolean te_reo_homepage = false;
     boolean store_history = true;
+    int current_page = 0;
 
     IndividualBrowserControlCenter(Activity individual_browser) {
         this.activity = individual_browser;
@@ -324,6 +326,7 @@ public class IndividualBrowserControlCenter {
         if (store_history) {
             Date current_datetime = new Date();
             browsing_history.add(url);
+            session_history.add(url);
             browsing_timestamps.add(current_datetime.getTime());
         }
     }
@@ -360,11 +363,19 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // TO DO
                             case R.id.back_menu:
-                                Log.d("test", "test back");
+                                if (session_history.size() > 1 && current_page < (session_history.size())) {
+                                    current_page++;
+                                    Log.d("test-back", session_history.get(session_history.size() - 1 - current_page));
+                                    browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                                }
                                 return true;
                             // TO DO
                             case R.id.forward_menu:
-                                Log.d("test", "test fwd");
+                                if (session_history.size() > 1 && current_page > 0) {
+                                    current_page--;
+                                    Log.d("test-fwd", session_history.get(session_history.size() - 1 - current_page));
+                                    browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                                }
                                 return true;
                             // Option to add a bookmark to the users stored bookmarks
                             case R.id.add_bookmark_menu:
@@ -374,7 +385,7 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // TO DO
                             case R.id.view_bookmarks_menu:
-                                if (bookmarks != null && bookmarks.size() != 0) {
+                                if (bookmarks != null && bookmarks.size() > 0) {
                                     for (int i = 0; i < bookmarks.size(); i++) {
                                         Log.d("Bookmarks test", bookmarks.get(i));
                                     }
@@ -382,13 +393,13 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // Option to clear all bookmarks from the users stored bookmarks
                             case R.id.clear_bookmarks_menu:
-                                if (bookmarks != null && bookmarks.size() != 0) {
+                                if (bookmarks != null && bookmarks.size() > 0) {
                                     bookmarks.clear();
                                 }
                                 return true;
                             // Option to clear all history from the users stored history
                             case R.id.clear_history_menu:
-                                if (browsing_history != null && browsing_history.size() != 0) {
+                                if (browsing_history != null && browsing_history.size() > 0) {
                                     browsing_history.clear();
                                     browsing_timestamps.clear();
                                 }
