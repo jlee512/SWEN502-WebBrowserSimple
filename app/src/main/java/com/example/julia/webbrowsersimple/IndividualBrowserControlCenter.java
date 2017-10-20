@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
@@ -123,17 +124,7 @@ public class IndividualBrowserControlCenter {
 
         render_webViewClient(webView, url_string, url_entry);
 
-        menu_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Set the popup menu styles
-                Context wrapper = new ContextThemeWrapper(activity, R.style.PopupMenu);
-                PopupMenu popup = new PopupMenu(wrapper, v);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.browser_menu, popup.getMenu());
-                popup.show();
-            }
-        });
+        setup_expandableMenu(menu_button);
 
     }
 
@@ -329,5 +320,51 @@ public class IndividualBrowserControlCenter {
 
     void addBookmark(String url) {
         bookmarks.add(url);
+    }
+
+    // Method to setup an expandable menu
+    void setup_expandableMenu(FloatingActionButton menu_button) {
+        menu_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Set the popup menu styles
+                Context wrapper = new ContextThemeWrapper(activity, R.style.PopupMenu);
+                PopupMenu popup = new PopupMenu(wrapper, v);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_home:
+                                Log.d("test", "test home");
+                                return true;
+                            case R.id.back_menu:
+                                Log.d("test", "test back");
+                                return true;
+                            case R.id.forward_menu:
+                                Log.d("test", "test fwd");
+                                return true;
+                            case R.id.add_bookmark_menu:
+                                Log.d("test", "test addbk");
+                                return true;
+                            case R.id.view_bookmarks_menu:
+                                Log.d("test", "test viewbk");
+                                return true;
+                            case R.id.clear_history_menu:
+                                Log.d("test", "test clearhis");
+                                return true;
+                            case R.id.view_history_menu:
+                                Log.d("test", "test viewhis");
+                                return true;
+                            default:
+                                return false;
+
+                        }
+                    }
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.browser_menu, popup.getMenu());
+                popup.show();
+            }
+        });
     }
 }
