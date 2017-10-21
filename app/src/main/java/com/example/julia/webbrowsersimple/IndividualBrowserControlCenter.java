@@ -13,8 +13,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -31,9 +33,9 @@ import java.util.List;
 public class IndividualBrowserControlCenter {
 
     Activity activity;
-    List<String> browsing_history = new ArrayList<>();
+    HistoryViewCustomAdapter historyViewAdapter;
+    List<HistoryItem> browsing_history = new ArrayList<>();
     List<String> session_history = new ArrayList<>();
-    List<Long> browsing_timestamps = new ArrayList<>();
     List<String> bookmarks = new ArrayList<>();
     //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
     boolean te_reo_homepage = false;
@@ -46,12 +48,8 @@ public class IndividualBrowserControlCenter {
 
     // Session variables - populated from shared preferences if available
 
-    public List<String> getBrowsing_history() {
+    public List<HistoryItem> getBrowsing_history() {
         return browsing_history;
-    }
-
-    public List<Long> getBrowsing_timestamps() {
-        return browsing_timestamps;
     }
 
     public List<String> getBookmarks() {
@@ -136,6 +134,31 @@ public class IndividualBrowserControlCenter {
         render_webViewClient(webView, url_string, url_entry);
 
         setup_expandableMenu(menu_button);
+
+    }
+
+    void viewHistory_main_logic() {
+        activity.setContentView(R.layout.history_main);
+
+        //Get the listview object
+        ListView history = (ListView) activity.findViewById(R.id.history_list);
+
+        if (browsing_history.size() < 1) {
+            List<HistoryItem> blank_history = new ArrayList<>();
+            blank_history.add(new HistoryItem("Looks like there's nothing here yet", -1));
+            historyViewAdapter = new HistoryViewCustomAdapter(activity, blank_history);
+        } else {
+            historyViewAdapter = new HistoryViewCustomAdapter(activity, browsing_history);
+        }
+
+        history.setAdapter(historyViewAdapter);
+
+        history.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("test", "Clicked on this url: " + )
+            }
+        });
 
     }
 
@@ -368,10 +391,12 @@ public class IndividualBrowserControlCenter {
 
     void addHistoryItem(String url) {
         if (store_history) {
-            Date current_datetime = new Date();
-            browsing_history.add(url);
+            //Add the url to the session history (links with forward/back functionality)
             session_history.add(url);
-            browsing_timestamps.add(current_datetime.getTime());
+            //Create a history item for use within the listview as required
+            Date current_datetime = new Date();
+            HistoryItem historyItemToAdd = new HistoryItem(url, current_datetime.getTime());
+            browsing_history.add(historyItemToAdd);
         }
     }
 
@@ -443,16 +468,15 @@ public class IndividualBrowserControlCenter {
                             case R.id.clear_history_menu:
                                 if (browsing_history != null && browsing_history.size() > 0) {
                                     browsing_history.clear();
-                                    browsing_timestamps.clear();
                                 }
                                 return true;
                             // TO DO
                             case R.id.view_history_menu:
                                 if (browsing_history != null && browsing_history.size() != 0) {
                                     for (int i = 0; i < browsing_history.size(); i++) {
-                                        Log.d("test-browser-history", browsing_history.get(i));
+                                        Log.d("test-browser-history", browsing_history.get(i).getHistory_url());
                                         DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");
-                                        Log.d("test-browser-timestamp", "" + dateFormatter.format(new Date(browsing_timestamps.get(i))));
+                                        Log.d("test-browser-timestamp", "" + dateFormatter.format(new Date(browsing_history.get(i).getHistory_timestamp())));
                                     }
 
                                 }
