@@ -64,7 +64,7 @@
                         android:ems="10"
                         android:gravity="center_horizontal"
                         android:hint="Enter your destination"
-                        android:imeOptions="actionSend"
+                        android:imeOptions="actionGo"
                         android:inputType="textUri"
                         android:textColor="@color/orangeFontColor"
                         android:textColorHint="@color/blueFontColor"

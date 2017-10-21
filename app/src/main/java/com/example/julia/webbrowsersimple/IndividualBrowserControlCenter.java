@@ -34,6 +34,7 @@ import java.util.List;
 public class IndividualBrowserControlCenter {
 
     Activity activity;
+    WebView webView;
     HistoryViewCustomAdapter historyViewAdapter;
     List<HistoryItem> browsing_history = new ArrayList<>();
     List<String> session_history = new ArrayList<>();
@@ -132,7 +133,7 @@ public class IndividualBrowserControlCenter {
         setup_targetIconOnClickListener(target_icon, url_entry);
 
         //Render the webview
-        WebView webView = (WebView) activity.findViewById(R.id.main_webview);
+        webView = (WebView) activity.findViewById(R.id.main_webview);
 
         render_webViewClient(webView, url_string, url_entry);
 
@@ -167,6 +168,12 @@ public class IndividualBrowserControlCenter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HistoryItem historyItem = (HistoryItem) history.getItemAtPosition(position);
+
+                // Add the selected historyItem to the history (a new entry to accurately represent the user's navigation)
+                addHistoryItem(historyItem.getHistory_url());
+                current_page = 0;
+
+                webView.clearCache(true);
                 browser_main_logic(historyItem.getHistory_url());
             }
         });
@@ -383,8 +390,6 @@ public class IndividualBrowserControlCenter {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //If the user returns home, clear the session history so the user can no longer navigate back and forward based on previous searches
-                session_history.clear();
 
                 WebView webview = (WebView) activity.findViewById(R.id.main_webview);
                 webview.stopLoading();
@@ -434,7 +439,7 @@ public class IndividualBrowserControlCenter {
             public void onClick(View v) {
                 //If there is any browsing history (i.e. it hasn't been cleared) return the user to their previous page
                 if (browsing_history.size() > 0) {
-                    browser_main_logic(browsing_history.get(browsing_history.size() - 1).getHistory_url());
+                    browser_main_logic(browsing_history.get(browsing_history.size() - 1 - current_page).getHistory_url());
                 } else {
                     //If the browsing history is empty, redirect the user to the home screen
                     home_screen_logic();
@@ -513,16 +518,9 @@ public class IndividualBrowserControlCenter {
                                     browsing_history.clear();
                                 }
                                 return true;
-                            // TO DO
+                            // Option to view the users browsing history (secondary to navbar buttons)
                             case R.id.view_history_menu:
-                                if (browsing_history != null && browsing_history.size() != 0) {
-                                    for (int i = 0; i < browsing_history.size(); i++) {
-                                        Log.d("test-browser-history", browsing_history.get(i).getHistory_url());
-                                        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");
-                                        Log.d("test-browser-timestamp", "" + dateFormatter.format(new Date(browsing_history.get(i).getHistory_timestamp())));
-                                    }
-
-                                }
+                                viewHistory_main_logic();
                                 return true;
                             // Toggle option to not log history (i.e. incognito mode)
                             case R.id.hide_history_menu:
