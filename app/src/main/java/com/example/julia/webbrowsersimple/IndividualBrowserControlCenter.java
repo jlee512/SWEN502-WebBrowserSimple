@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -91,6 +92,7 @@ public class IndividualBrowserControlCenter {
         setup_overallLayoutOnClickListener(overallLayout, url_entry);
         setup_urlEntryOnEditListener(url_entry);
         setup_targetIconOnClickListener(target_icon, url_entry);
+        setup_viewHistoryOnClickListener(history_button);
         setup_googleIconOnClickListener(googleSearch_button, url_entry);
 
     }
@@ -125,6 +127,7 @@ public class IndividualBrowserControlCenter {
         setup_homeButtonOnClickListener(home);
         setup_backOnClickListener(back_button, url_entry);
         setup_forwardOnClickListener(forward_button, url_entry);
+        setup_viewHistoryOnClickListener(history_button);
         setup_googleIconOnClickListener(googleSearch_button, url_entry);
         setup_targetIconOnClickListener(target_icon, url_entry);
 
@@ -140,8 +143,15 @@ public class IndividualBrowserControlCenter {
     void viewHistory_main_logic() {
         activity.setContentView(R.layout.history_main);
 
+        //Setup buttons and listeners (other than the item on lick listener
+        Button clear_history_button = (Button) activity.findViewById(R.id.clear_history_from_list);
+        setup_clearHistoryOnClickListener(clear_history_button);
+        Button go_back_from_history = (Button) activity.findViewById(R.id.back_to_browser_button);
+        setup_goBackFromSpecialScreenOnClickListener(go_back_from_history);
+
+
         //Get the listview object
-        ListView history = (ListView) activity.findViewById(R.id.history_list);
+        final ListView history = (ListView) activity.findViewById(R.id.history_list);
 
         if (browsing_history.size() < 1) {
             List<HistoryItem> blank_history = new ArrayList<>();
@@ -156,7 +166,8 @@ public class IndividualBrowserControlCenter {
         history.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d("test", "Clicked on this url: " + )
+                HistoryItem historyItem = (HistoryItem) history.getItemAtPosition(position);
+                browser_main_logic(historyItem.getHistory_url());
             }
         });
 
@@ -203,6 +214,16 @@ public class IndividualBrowserControlCenter {
                     current_page--;
                     browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
                 }
+            }
+        });
+    }
+
+    void setup_viewHistoryOnClickListener(FloatingActionButton history_button) {
+        //Setup history button event listener
+        history_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHistory_main_logic();
             }
         });
     }
@@ -321,10 +342,7 @@ public class IndividualBrowserControlCenter {
                 //When a user navigates forward by interacting with the browser,
                 // (1) Reset the session history to ignore or pages ahead of this (if navigation back has occurred)
                 // (2) Rest the current page to zero as there is no longer the ability to go forward
-                Log.d("test-session adjust", "current page: " + current_page);
-                Log.d("test-session adjust" , "session length: " + session_history.size());
                 session_history = session_history.subList(0, session_history.size() - current_page);
-                Log.d("New session length", "" + session_history.size());
                 current_page = 0;
 
                 // Capture timestamp and url to store in history list
@@ -398,6 +416,31 @@ public class IndividualBrowserControlCenter {
             HistoryItem historyItemToAdd = new HistoryItem(url, current_datetime.getTime());
             browsing_history.add(historyItemToAdd);
         }
+    }
+
+    void setup_clearHistoryOnClickListener(Button clear_history_button) {
+        clear_history_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                browsing_history.clear();
+                viewHistory_main_logic();
+            }
+        });
+    }
+
+    void setup_goBackFromSpecialScreenOnClickListener(Button goBack_from_special_screen_button) {
+        goBack_from_special_screen_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //If there is any browsing history (i.e. it hasn't been cleared) return the user to their previous page
+                if (browsing_history.size() > 0) {
+                    browser_main_logic(browsing_history.get(browsing_history.size() - 1).getHistory_url());
+                } else {
+                    //If the browsing history is empty, redirect the user to the home screen
+                    home_screen_logic();
+                }
+            }
+        });
     }
 
     void addBookmark(String url) {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -58,7 +59,7 @@ public class HistoryViewCustomAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = inflater.inflate(R.layout.history_item_layout, null);
 
-            viewHolder.historyItemButton = (FloatingActionButton) convertView.findViewById(R.id.historyItem_button);
+            viewHolder.historyItemButton = (ImageView) convertView.findViewById(R.id.historyItem_button);
             viewHolder.historyItem_text = (TextView) convertView.findViewById(R.id.historyItem_text);
             viewHolder.historyItem_timestamp = (TextView) convertView.findViewById(R.id.historyItemTime_text);
 
@@ -86,7 +87,7 @@ public class HistoryViewCustomAdapter extends BaseAdapter {
 
     //Inner class to store element tags in getView function
     public static class ViewHolder {
-        FloatingActionButton historyItemButton;
+        ImageView historyItemButton;
         TextView historyItem_text;
         TextView historyItem_timestamp;
     }
