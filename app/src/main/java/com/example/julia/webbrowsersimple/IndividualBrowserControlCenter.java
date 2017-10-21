@@ -214,10 +214,37 @@ public class IndividualBrowserControlCenter {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String bookmarksItem = (String) parent.getItemAtPosition(position);
 
-                // Add the selected historyItem to the history (a new entry to accurately represent the user's navigation)
-                addHistoryItem(bookmarksItem);
-                current_page = 0;
-                browser_main_logic(bookmarksItem);
+                //Initialise popup menu
+                Context wrapper = new ContextThemeWrapper(activity, R.style.PopupMenu);
+                final PopupMenu popup = new PopupMenu(wrapper, view);
+
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.bookmarks_options, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new CustomBookmarksMenuOnClickListener(bookmarksItem, position) {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            // Option to view the bookmark web resource and return to the browser
+                            case R.id.bookmark_view_popup:
+                                // Add the selected historyItem to the history (a new entry to accurately represent the user's navigation)
+                                addHistoryItem(bookmarksItem);
+                                current_page = 0;
+                                browser_main_logic(bookmarksItem);
+                                return true;
+                            // Option to delete the bookmark item
+                            case R.id.bookmark_delete_popup:
+                                // Delete the bookmark item at the position returned by the onItemClick method
+                                bookmarks.remove(position);
+                                viewBookmarks_main_logic();
+                                return true;
+                            default:
+                                return false;
+
+                        }
+                    }
+                });
+                popup.show();
             }
         });
 
@@ -257,7 +284,7 @@ public class IndividualBrowserControlCenter {
 
     void setup_forwardOnClickListener(FloatingActionButton forward_button, EditText url_entry) {
         // Setup forward button event listener
-        forward_button.setOnClickListener(new CustomOnClickListener(url_entry){
+        forward_button.setOnClickListener(new CustomOnClickListener(url_entry) {
             @Override
             public void onClick(View v) {
                 if (session_history.size() > 1 && current_page > 0) {
