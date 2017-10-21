@@ -38,21 +38,46 @@ public class IndividualBrowserControlCenter {
 
     //To be stored in shared preferences (for persistence)
     //History
-    List<HistoryItem> browsing_history = new ArrayList<>();
+    List<HistoryItem> browsing_history;
     //Bookmarks
-    List<String> bookmarks = new ArrayList<>();
+    List<String> bookmarks;
     //Settings
     //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
-    boolean te_reo_homepage = false;
-    boolean store_history = true;
-    int current_page = 0;
+    boolean te_reo_homepage;
+    boolean store_history;
 
     //Session history to be shifted to WebBrowserSimpleAcitivity class as a global variable (which will be restarted with each application open/close)
-    List<String> session_history = new ArrayList<>();
+    List<String> session_history;
+    int layoutState;
+    int current_page;
 
-    IndividualBrowserControlCenter(Activity individual_browser) {
+    IndividualBrowserControlCenter(Activity individual_browser, WebView webView, HistoryViewCustomAdapter historyViewAdapter, BookmarksViewCustomAdapter bookmarksViewAdapter, List<HistoryItem> browsing_history, List<String> bookmarks, boolean te_reo_homepage, boolean store_history, int current_page, List<String> session_history, int layoutState) {
         this.activity = individual_browser;
-        home_screen_logic();
+        this.webView = webView;
+        this.historyViewAdapter = historyViewAdapter;
+        this.bookmarksViewAdapter = bookmarksViewAdapter;
+        this.browsing_history = browsing_history;
+        this.bookmarks = bookmarks;
+        this.te_reo_homepage = te_reo_homepage;
+        this.store_history = store_history;
+        this.current_page = current_page;
+        this.session_history = session_history;
+        this.layoutState = layoutState;
+
+        switch(layoutState) {
+            case R.layout.browser_home:
+                home_screen_logic();
+                break;
+            case R.layout.browser_main:
+                browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                break;
+            case R.layout.history_main:
+                viewHistory_main_logic();
+                break;
+            case R.layout.bookmarks_main:
+                viewBookmarks_main_logic();
+                break;
+        }
     }
 
     // Session variables - populated from shared preferences if available
@@ -63,6 +88,18 @@ public class IndividualBrowserControlCenter {
 
     public List<String> getBookmarks() {
         return bookmarks;
+    }
+
+    public int getLayoutState() {
+        return layoutState;
+    }
+
+    public List<String> getSession_history() {
+        return session_history;
+    }
+
+    public int getCurrent_page() {
+        return current_page;
     }
 
     // -------------------------- Core methods related to primary application layouts ---------------------
@@ -76,6 +113,7 @@ public class IndividualBrowserControlCenter {
 //
 //        }
 
+        layoutState = R.layout.browser_home;
         activity.setContentView(R.layout.browser_home);
 
         //Apply Te Reo logo depending on setting
@@ -108,6 +146,7 @@ public class IndividualBrowserControlCenter {
 
     // This method encapsulates the logic (backend/dynamic frontend) for the main browser interface
     void browser_main_logic(String url_string) {
+        layoutState = R.layout.browser_main;
         activity.setContentView(R.layout.browser_main);
 
         //Apply Te Reo logo depending on setting
@@ -151,6 +190,7 @@ public class IndividualBrowserControlCenter {
     }
 
     void viewHistory_main_logic() {
+        layoutState = R.layout.history_main;
         activity.setContentView(R.layout.history_main);
 
         //Setup buttons and listeners (other than the item on lick listener
@@ -188,6 +228,7 @@ public class IndividualBrowserControlCenter {
     }
 
     void viewBookmarks_main_logic() {
+        layoutState = R.layout.bookmarks_main;
         activity.setContentView(R.layout.bookmarks_main);
 
         //Setup buttons and listeners (other than the item on lick listener
