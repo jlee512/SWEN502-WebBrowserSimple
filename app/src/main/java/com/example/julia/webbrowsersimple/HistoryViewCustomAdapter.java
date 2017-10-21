@@ -1,15 +1,12 @@
 package com.example.julia.webbrowsersimple;
 
 import android.app.Activity;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,7 +72,7 @@ public class HistoryViewCustomAdapter extends BaseAdapter {
         //Get the historyItem url
         viewHolder.historyItem_text.setText(historyItem.getHistory_url());
 
-        //Get the historyItem timestamp and format into date string
+        //Get the historyItem timestamp and format into date string (if exists)
         if (historyItem.getHistory_timestamp() == -1 ) {
             viewHolder.historyItem_timestamp.setText(". . .");
         } else {

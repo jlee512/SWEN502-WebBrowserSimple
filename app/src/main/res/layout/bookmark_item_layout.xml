@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingTop="10dp"
+        tools:ignore="RtlSymmetry,UselessParent">
+
+        <ImageView
+            android:id="@+id/bookmarkItem_button"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="add bookmark item icon"
+            app:srcCompat="@drawable/bookmarksuniticon"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            tools:ignore="InefficientWeight">
+
+            <TextView
+                android:id="@+id/bookmarkItem_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText,NestedWeights" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
