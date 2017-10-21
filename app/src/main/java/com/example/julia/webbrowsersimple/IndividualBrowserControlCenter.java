@@ -21,8 +21,6 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,13 +34,20 @@ public class IndividualBrowserControlCenter {
     Activity activity;
     WebView webView;
     HistoryViewCustomAdapter historyViewAdapter;
+
+    //To be stored in shared preferences (for persistence)
+    //History
     List<HistoryItem> browsing_history = new ArrayList<>();
-    List<String> session_history = new ArrayList<>();
+    //Bookmarks
     List<String> bookmarks = new ArrayList<>();
+    //Settings
     //Set session Te Reo homepage and store history options with defaults (to be overwritten by shared preferences if stored
     boolean te_reo_homepage = false;
     boolean store_history = true;
     int current_page = 0;
+
+    //Session history to be shifted to WebBrowserSimpleAcitivity class as a global variable (which will be restarted with each application open/close)
+    List<String> session_history = new ArrayList<>();
 
     IndividualBrowserControlCenter(Activity individual_browser) {
         this.activity = individual_browser;
