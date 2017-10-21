@@ -102,6 +102,14 @@ public class IndividualBrowserControlCenter {
         return current_page;
     }
 
+    public boolean isTe_reo_homepage() {
+        return te_reo_homepage;
+    }
+
+    public boolean isStore_history() {
+        return store_history;
+    }
+
     // -------------------------- Core methods related to primary application layouts ---------------------
 
     // This method encapsulates the logic (backend/dynamic frontend) for the browser home screen
@@ -453,6 +461,7 @@ public class IndividualBrowserControlCenter {
 
                 String google_url = googleSearch_prefix + search_string;
 
+                hideKeyboard(activity);
                 browser_main_logic(google_url);
             }
         });
@@ -657,6 +666,13 @@ public class IndividualBrowserControlCenter {
                             // Toggle option to have all logo instances on the browser modified into the Te Reo version
                             case R.id.tereo_homepage_menu:
                                 te_reo_homepage = !item.isChecked();
+                                if (te_reo_homepage) {
+                                    ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
+                                    home_page_logo.setImageResource(R.drawable.te_haerenga_logo);
+                                } else {
+                                    ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
+                                    home_page_logo.setImageResource(R.drawable.journey_logo);
+                                }
                                 item.setChecked(te_reo_homepage);
                                 return true;
                             default:
