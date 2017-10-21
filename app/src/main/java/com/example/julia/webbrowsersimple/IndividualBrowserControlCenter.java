@@ -34,6 +34,7 @@ public class IndividualBrowserControlCenter {
     Activity activity;
     WebView webView;
     HistoryViewCustomAdapter historyViewAdapter;
+    BookmarksViewCustomAdapter bookmarksViewAdapter;
 
     //To be stored in shared preferences (for persistence)
     //History
@@ -51,6 +52,7 @@ public class IndividualBrowserControlCenter {
 
     IndividualBrowserControlCenter(Activity individual_browser) {
         this.activity = individual_browser;
+        home_screen_logic();
     }
 
     // Session variables - populated from shared preferences if available
@@ -99,6 +101,7 @@ public class IndividualBrowserControlCenter {
         setup_urlEntryOnEditListener(url_entry);
         setup_targetIconOnClickListener(target_icon, url_entry);
         setup_viewHistoryOnClickListener(history_button);
+        setup_viewBookmarksOnClickListener(bookmarks_button);
         setup_googleIconOnClickListener(googleSearch_button, url_entry);
 
     }
@@ -115,7 +118,7 @@ public class IndividualBrowserControlCenter {
 
         // Get all interactive components as objects and setup event listeners
         EditText url_entry = (EditText) activity.findViewById(R.id.url_entry2);
-        View overallLayout = (View) activity.findViewById(R.id.overallLayout);
+        View overallLayout = activity.findViewById(R.id.overallLayout);
         ImageView target_icon = (ImageView) activity.findViewById(R.id.target_icon);
         ImageView home = (ImageView) activity.findViewById(R.id.journey_home);
         //Floating Action Buttons
@@ -134,6 +137,7 @@ public class IndividualBrowserControlCenter {
         setup_backOnClickListener(back_button, url_entry);
         setup_forwardOnClickListener(forward_button, url_entry);
         setup_viewHistoryOnClickListener(history_button);
+        setup_viewBookmarksOnClickListener(bookmarks_button);
         setup_googleIconOnClickListener(googleSearch_button, url_entry);
         setup_targetIconOnClickListener(target_icon, url_entry);
 
@@ -157,7 +161,7 @@ public class IndividualBrowserControlCenter {
 
 
         //Get the listview object
-        final ListView history = (ListView) activity.findViewById(R.id.history_list);
+        ListView history = (ListView) activity.findViewById(R.id.history_list);
 
         if (browsing_history.size() < 1) {
             List<HistoryItem> blank_history = new ArrayList<>();
@@ -172,14 +176,48 @@ public class IndividualBrowserControlCenter {
         history.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HistoryItem historyItem = (HistoryItem) history.getItemAtPosition(position);
+                HistoryItem historyItem = (HistoryItem) parent.getItemAtPosition(position);
 
                 // Add the selected historyItem to the history (a new entry to accurately represent the user's navigation)
                 addHistoryItem(historyItem.getHistory_url());
                 current_page = 0;
-
-                webView.clearCache(true);
                 browser_main_logic(historyItem.getHistory_url());
+            }
+        });
+
+    }
+
+    void viewBookmarks_main_logic() {
+        activity.setContentView(R.layout.bookmarks_main);
+
+        //Setup buttons and listeners (other than the item on lick listener
+        Button clear_bookmarks_button = (Button) activity.findViewById(R.id.clear_bookmarks_from_list);
+        setup_clearBookmarksOnClickListener(clear_bookmarks_button);
+        Button go_back_from_bookmarks = (Button) activity.findViewById(R.id.back_to_browser_from_bookmarks_button);
+        setup_goBackFromSpecialScreenOnClickListener(go_back_from_bookmarks);
+
+        //Get the listview object
+        final ListView bookmarks_list = (ListView) activity.findViewById(R.id.bookmarks_list);
+
+        if (bookmarks.size() < 1) {
+            List<String> blank_bookmarks = new ArrayList<>();
+            blank_bookmarks.add("Looks like there's nothing here yet");
+            bookmarksViewAdapter = new BookmarksViewCustomAdapter(activity, blank_bookmarks);
+        } else {
+            bookmarksViewAdapter = new BookmarksViewCustomAdapter(activity, bookmarks);
+        }
+
+        bookmarks_list.setAdapter(bookmarksViewAdapter);
+
+        bookmarks_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String bookmarksItem = (String) parent.getItemAtPosition(position);
+
+                // Add the selected historyItem to the history (a new entry to accurately represent the user's navigation)
+                addHistoryItem(bookmarksItem);
+                current_page = 0;
+                browser_main_logic(bookmarksItem);
             }
         });
 
@@ -236,6 +274,16 @@ public class IndividualBrowserControlCenter {
             @Override
             public void onClick(View v) {
                 viewHistory_main_logic();
+            }
+        });
+    }
+
+    void setup_viewBookmarksOnClickListener(FloatingActionButton bookmarks_button) {
+        //Setup bookmarks button event listener
+        bookmarks_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewBookmarks_main_logic();
             }
         });
     }
@@ -438,6 +486,16 @@ public class IndividualBrowserControlCenter {
         });
     }
 
+    void setup_clearBookmarksOnClickListener(Button clear_bookmarks_button) {
+        clear_bookmarks_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookmarks.clear();
+                viewBookmarks_main_logic();
+            }
+        });
+    }
+
     void setup_goBackFromSpecialScreenOnClickListener(Button goBack_from_special_screen_button) {
         goBack_from_special_screen_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -505,11 +563,7 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // TO DO
                             case R.id.view_bookmarks_menu:
-                                if (bookmarks != null && bookmarks.size() > 0) {
-                                    for (int i = 0; i < bookmarks.size(); i++) {
-                                        Log.d("Bookmarks test", bookmarks.get(i));
-                                    }
-                                }
+                                viewBookmarks_main_logic();
                                 return true;
                             // Option to clear all bookmarks from the users stored bookmarks
                             case R.id.clear_bookmarks_menu:

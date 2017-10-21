@@ -18,7 +18,6 @@ public class WebBrowserSimpleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         IndividualBrowserControlCenter browserInstance = browserInstance = new IndividualBrowserControlCenter(this);
-        browserInstance.home_screen_logic();
 
     }
 }

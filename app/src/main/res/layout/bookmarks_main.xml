@@ -60,7 +60,7 @@
                 tools:ignore="ButtonStyle,HardcodedText" />
 
             <Button
-                android:id="@+id/back_to_browser_button"
+                android:id="@+id/back_to_browser_from_bookmarks_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"

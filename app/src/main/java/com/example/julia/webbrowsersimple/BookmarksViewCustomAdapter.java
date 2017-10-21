@@ -60,7 +60,7 @@ public class BookmarksViewCustomAdapter extends BaseAdapter {
             //Store the holder inside the view
             convertView.setTag(viewHolderB);
         } else {
-            //Get viewHolder to prepare for udpate with new data
+            //Get viewHolder to prepare for update with new data
             viewHolderB = (ViewHolderB) convertView.getTag();
         }
 
