@@ -307,6 +307,11 @@ public class IndividualBrowserControlCenter {
 
     String check_alternativeURLValidity(String url_string) {
 
+        // If url does not contain a '.' it is most likely a SEARCH entry, return feedback to user
+        if (!url_string.contains(".")) {
+            return url_string;
+        }
+
         String processed_url_string = "";
         String http_url_prefix = "http://";
         String http_www_url_prefix = "http://www.";
