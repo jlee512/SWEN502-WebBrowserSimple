@@ -131,6 +131,15 @@
                         app:srcCompat="@drawable/googleicon" />
 
                     <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/browser_menu_expand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        app:fabSize="mini"
+                        app:srcCompat="@drawable/menuicon" />
+
+                    <android.support.design.widget.FloatingActionButton
                         android:id="@+id/forward_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,14 +159,14 @@
 
                         <ImageView
                             android:id="@+id/journey_home"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_marginEnd="15dp"
                             android:layout_marginRight="15dp"
                             android:contentDescription="@string/journey_logo"
-                            app:srcCompat="@drawable/journey_logo"
+                            app:srcCompat="@mipmap/ic_launcher"
                             tools:ignore="VectorDrawableCompat" />
                     </RelativeLayout>
 
@@ -165,16 +174,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/browser_menu_expand"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/menuicon" />
 
     </RelativeLayout>
 </RelativeLayout>

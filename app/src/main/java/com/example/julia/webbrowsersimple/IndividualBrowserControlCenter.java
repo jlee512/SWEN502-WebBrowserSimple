@@ -155,13 +155,8 @@ public class IndividualBrowserControlCenter {
     // This method encapsulates the logic (backend/dynamic frontend) for the main browser interface
     void browser_main_logic(String url_string) {
         layoutState = R.layout.browser_main;
-        activity.setContentView(R.layout.browser_main);
 
-        //Apply Te Reo logo depending on setting
-        if (te_reo_homepage) {
-            ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
-            home_page_logo.setImageResource(R.drawable.te_haerenga_logo);
-        }
+        activity.setContentView(R.layout.browser_main);
 
         // Get all interactive components as objects and setup event listeners
         EditText url_entry = (EditText) activity.findViewById(R.id.url_entry2);
@@ -424,6 +419,7 @@ public class IndividualBrowserControlCenter {
                 if (url_validity_check(url_string)) {
                     hideKeyboard(activity);
                     browser_main_logic(url_string);
+
                     return true;
                 } else {
                     //Switch to home screen logic to display error message
@@ -662,8 +658,7 @@ public class IndividualBrowserControlCenter {
                                 return true;
                             // Option to add a bookmark to the users stored bookmarks
                             case R.id.add_bookmark_menu:
-                                EditText current_url = (EditText) activity.findViewById(R.id.url_entry2);
-                                String current_url_string = current_url.getText().toString();
+                                String current_url_string = session_history.get(session_history.size() - 1 - current_page);
                                 bookmarks.add(current_url_string);
                                 return true;
                             // TO DO
@@ -694,13 +689,6 @@ public class IndividualBrowserControlCenter {
                             // Toggle option to have all logo instances on the browser modified into the Te Reo version
                             case R.id.tereo_homepage_menu:
                                 te_reo_homepage = !item.isChecked();
-                                if (te_reo_homepage) {
-                                    ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
-                                    home_page_logo.setImageResource(R.drawable.te_haerenga_logo);
-                                } else {
-                                    ImageView home_page_logo = (ImageView) activity.findViewById(R.id.journey_home);
-                                    home_page_logo.setImageResource(R.drawable.journey_logo);
-                                }
                                 item.setChecked(te_reo_homepage);
                                 return true;
                             case R.id.reset_application:
