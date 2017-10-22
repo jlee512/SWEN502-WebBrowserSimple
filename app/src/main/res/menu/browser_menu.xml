@@ -71,6 +71,10 @@
                 android:checkable="true"
                 android:title="Te Reo Homepage"
                 tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/reset_application"
+                android:icon="@android:drawable/stat_sys_warning"
+                android:title="Reset Browser" />
         </menu>
     </item>
 </menu>

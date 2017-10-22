@@ -2,9 +2,9 @@ package com.example.julia.webbrowsersimple;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
@@ -305,17 +305,30 @@ public class IndividualBrowserControlCenter {
         return URLUtil.isValidUrl(url_string);
     }
 
-    String url_formatting_check(String url_string) {
+    String check_alternativeURLValidity(String url_string) {
 
         String processed_url_string = "";
+        String http_url_prefix = "http://";
+        String http_www_url_prefix = "http://www.";
+        String https_url_prefix = "https://";
+        String https_www_url_prefix = "https://www.";
 
-        //If https://www. or http://www. not prefixing url, modify string to smooth user experience
-        if (!(url_string.startsWith("http://www.") || url_string.startsWith("https://www."))) {
-            // If url ends with contains .co. || .com || .org || .govt
+        //Check if users url starting with http:// will fix url validity
+        if (URLUtil.isValidUrl(http_url_prefix + url_string)) {
+            return http_url_prefix + url_string;
+        //Otherwise check if https:// will fix url validity
+        } else if (URLUtil.isValidUrl(https_url_prefix + url_string)) {
+            return https_url_prefix + url_string;
+        //Otherwise check if http://www. will fix url validity
+        } else if (URLUtil.isValidUrl(http_www_url_prefix + url_string)) {
+            return http_www_url_prefix + url_string;
+        //Otherwise check if https://www. will fix url validity
+        } else if (URLUtil.isValidUrl(https_www_url_prefix + url_string)) {
+            return https_www_url_prefix + url_string;
+        //Otherwise return the original url with error message
+        } else {
+            return processed_url_string;
         }
-
-
-        return "";
     }
 
     void setup_backOnClickListener(FloatingActionButton back_button, EditText url_entry) {
@@ -400,7 +413,9 @@ public class IndividualBrowserControlCenter {
         url_entry.setOnEditorActionListener(new CustomOnEditorActionListener(url_entry) {
             @Override
             public boolean onEditorAction(TextView url_entry, int actionId, KeyEvent event) {
-                String url_string = url_entry.getText().toString();
+                //Check validity of various URL combinations
+                String url_string = check_alternativeURLValidity(url_entry.getText().toString());
+
                 if (url_validity_check(url_string)) {
                     hideKeyboard(activity);
                     browser_main_logic(url_string);
@@ -429,7 +444,10 @@ public class IndividualBrowserControlCenter {
         target_icon.setOnClickListener(new CustomOnClickListener(url_entry) {
             @Override
             public void onClick(View v) {
-                String url_string = url_entry.getText().toString();
+
+                //Check validity of various URL combinations
+                String url_string = check_alternativeURLValidity(url_entry.getText().toString());
+
                 if (url_validity_check(url_string)) {
                     hideKeyboard(activity);
                     browser_main_logic(url_string);
@@ -544,13 +562,13 @@ public class IndividualBrowserControlCenter {
 
     void addHistoryItem(String url) {
         if (store_history) {
-            //Add the url to the session history (links with forward/back functionality)
-            session_history.add(url);
             //Create a history item for use within the listview as required
             Date current_datetime = new Date();
             HistoryItem historyItemToAdd = new HistoryItem(url, current_datetime.getTime());
             browsing_history.add(historyItemToAdd);
         }
+        //Add the url to the session history (links with forward/back functionality)
+        session_history.add(url);
     }
 
     void setup_clearHistoryOnClickListener(Button clear_history_button) {
@@ -581,8 +599,13 @@ public class IndividualBrowserControlCenter {
                 if (browsing_history.size() > 0) {
                     browser_main_logic(browsing_history.get(browsing_history.size() - 1 - current_page).getHistory_url());
                 } else {
-                    //If the browsing history is empty, redirect the user to the home screen
-                    home_screen_logic();
+                    //If the session history is not empty, return the user their previous page
+                    if (session_history.size() > 0) {
+                        browser_main_logic(session_history.get(session_history.size() - 1 - current_page));
+                    } else {
+                        //If the browsing history is empty, redirect the user to the home screen
+                        home_screen_logic();
+                    }
                 }
             }
         });
@@ -674,6 +697,20 @@ public class IndividualBrowserControlCenter {
                                     home_page_logo.setImageResource(R.drawable.journey_logo);
                                 }
                                 item.setChecked(te_reo_homepage);
+                                return true;
+                            case R.id.reset_application:
+                                //Reset session variables
+                                session_history = new ArrayList<>();
+                                current_page = 0;
+                                layoutState = R.layout.browser_home;
+
+                                //Clear shared preferences data from the session
+                                browsing_history.clear();
+                                bookmarks.clear();
+                                te_reo_homepage = false;
+                                store_history = true;
+
+                                home_screen_logic();
                                 return true;
                             default:
                                 return false;
