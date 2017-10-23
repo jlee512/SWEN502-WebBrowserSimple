@@ -314,16 +314,16 @@ public class IndividualBrowserControlCenter {
         String https_www_url_prefix = "https://www.";
 
         //Check if users url starting with http:// will fix url validity
-        if (URLUtil.isValidUrl(http_url_prefix + url_string)) {
+        if (!url_string.contains("http:// ") && URLUtil.isValidUrl(http_url_prefix + url_string)) {
             return http_url_prefix + url_string;
         //Otherwise check if https:// will fix url validity
-        } else if (URLUtil.isValidUrl(https_url_prefix + url_string)) {
+        } else if (!url_string.contains("https:// ") && URLUtil.isValidUrl(https_url_prefix + url_string)) {
             return https_url_prefix + url_string;
         //Otherwise check if http://www. will fix url validity
-        } else if (URLUtil.isValidUrl(http_www_url_prefix + url_string)) {
+        } else if (!url_string.contains("http://www. ") && URLUtil.isValidUrl(http_www_url_prefix + url_string)) {
             return http_www_url_prefix + url_string;
         //Otherwise check if https://www. will fix url validity
-        } else if (URLUtil.isValidUrl(https_www_url_prefix + url_string)) {
+        } else if (!url_string.contains("https://www. ") && URLUtil.isValidUrl(https_www_url_prefix + url_string)) {
             return https_www_url_prefix + url_string;
         //Otherwise return the original url with error message
         } else {
